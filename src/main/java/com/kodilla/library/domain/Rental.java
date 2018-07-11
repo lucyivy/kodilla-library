@@ -20,26 +20,29 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Transient
-    private BookSpecimen specimen;
-    @Transient
-    private User user;
-
-    @Column(name="Rented Date")
-    private LocalDate rentedDate;
-
-    @Column(name="Return Date")
-    private LocalDate returnDate;
-
     @ManyToOne
     @JoinColumn(name = "Specimen_Id")
+    private BookSpecimen specimen;
+
+    @ManyToOne
+    @JoinColumn(name = "User_Id")
+    private User user;
+
+    @Column(name="Rented_Date")
+    private LocalDate rentedDate;
+
+    @Column(name="Return_Date")
+    private LocalDate returnDate;
+
+    @Column(name="Date_Returned")
+    private LocalDate dateReturned;
+
     public BookSpecimen getSpecimen() {
         return specimen;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "User_Id")
     public User getUser() {
         return user;
     }
+
 }

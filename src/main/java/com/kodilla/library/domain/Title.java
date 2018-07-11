@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Title {
     private Long id;
 
     @Column(name="Title")
+    @NotNull
     private String title;
 
     @Column(name="Author")
@@ -30,7 +32,7 @@ public class Title {
     private int publishedYear;
 
     @Transient
-    private List<BookSpecimen> specimens;
+    private List<BookSpecimen> specimens = new ArrayList<>();
 
     @OneToMany(
             targetEntity = BookSpecimen.class,

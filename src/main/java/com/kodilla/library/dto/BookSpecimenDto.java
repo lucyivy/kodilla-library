@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,5 +19,5 @@ public class BookSpecimenDto{
         private Title title;
         private String status;
         private boolean isAvailableForRent;
-        private List<Rental> rentals;
+        private List<Rental> rentals = new ArrayList<>();
 }

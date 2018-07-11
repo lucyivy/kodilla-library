@@ -32,7 +32,7 @@ public class User {
     private LocalDate joiningDate;
 
     @Transient
-    private List<Rental> rentals;
+    private List<Rental> rentals = new ArrayList<>();
 
     public User(Long id, String firstName, String lastName) {
         this.id = id;
@@ -46,7 +46,7 @@ public class User {
             targetEntity = Rental.class,
             mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     public List<Rental> getRentals() {
         return rentals;

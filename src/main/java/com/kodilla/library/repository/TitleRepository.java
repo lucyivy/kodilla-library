@@ -11,19 +11,11 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public interface BookSpecimenRepository extends CrudRepository<BookSpecimen, Long> {
+public interface TitleRepository extends CrudRepository<Title, Long> {
 
     @Override
-    List<BookSpecimen> findAll();
+    List<Title> findAll();
 
     @Override
-    Optional<BookSpecimen> findById(Long Id);
-
-    @Override
-    BookSpecimen save(BookSpecimen specimen);
-
-    @Override
-    void deleteById(Long Id);
-
+    Title save(Title title);
 }
-
