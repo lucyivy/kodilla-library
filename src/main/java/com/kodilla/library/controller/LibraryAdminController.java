@@ -34,7 +34,7 @@ public class LibraryAdminController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value="deleteUser")
-    public void deleteUser(@RequestParam Long Id) {
+    public void deleteUser(@RequestParam("Id") Long Id) {
         service.deleteUser(Id);
     }
 

@@ -10,6 +10,7 @@ import com.kodilla.library.repository.RentalRepository;
 import com.kodilla.library.repository.TitleRepository;
 import com.kodilla.library.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -44,8 +45,8 @@ public class DbService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+    public void deleteUser(Long Id) {
+        userRepository.deleteById(Id);
     }
 
     public BookSpecimen addSpecimen(BookSpecimen specimen) {

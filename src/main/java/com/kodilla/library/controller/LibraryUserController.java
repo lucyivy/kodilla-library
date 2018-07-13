@@ -7,11 +7,9 @@ import com.kodilla.library.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/v1/library/user")
@@ -24,7 +22,7 @@ public class LibraryUserController {
     private LibraryMapper mapper;
 
     @RequestMapping(method = RequestMethod.GET, value="getBookSpecimens")
-    public List<BookSpecimenDto> getAvailableSpecimen(@RequestParam String title) {
+    public List<BookSpecimenDto> getAvailableSpecimen(@RequestParam("title") String title) {
         List<BookSpecimenDto> toReturn = new ArrayList<BookSpecimenDto>();
 
         for(BookSpecimen specimen : service.findAvailableSpecimenByTitle(title)) {
@@ -35,12 +33,12 @@ public class LibraryUserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value="rentBook")
-    public String rentBook(@RequestParam Long specimenId, @RequestParam Long userId){
+    public String rentBook(@RequestParam("specimenId") Long specimenId, @RequestParam("userId") Long userId){
         return service.rentBook(specimenId, userId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value="return")
-    public String returnBook(@RequestParam Long rentId){
+    public String returnBook(@RequestParam("rentId") Long rentId){
         return service.returnBook(rentId);
     }
 
