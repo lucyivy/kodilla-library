@@ -1,38 +1,30 @@
 package com.kodilla.library.controller;
 
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import java.time.LocalDate;
-import java.util.*;
-
+import com.kodilla.library.domain.BookSpecimen;
+import com.kodilla.library.domain.Rental;
 import com.kodilla.library.domain.Title;
 import com.kodilla.library.dto.BookSpecimenDto;
+import com.kodilla.library.mapper.LibraryMapper;
 import com.kodilla.library.service.DbService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.gson.Gson;
-import com.kodilla.library.domain.Rental;
-import com.kodilla.library.domain.User;
-import com.kodilla.library.dto.UserDto;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(LibraryUserController.class)
@@ -42,26 +34,31 @@ public class LibraryUserControllerTestSuite {
     private MockMvc mockMvc;
 
     @MockBean
-    private LibraryUserController controller;
+    private LibraryMapper mapper;
+
+    @MockBean
+    private DbService service;
 
     @Test
     public void testGetAvailableSpecimen() throws Exception {
         //Given
-        List<BookSpecimenDto> specimens = new ArrayList<>();
-        specimens.add(new BookSpecimenDto());
-        when(controller.getAvailableSpecimen(ArgumentMatchers.any(String.class))).thenReturn(specimens);
+        BookSpecimen specimen = new BookSpecimen(5L, new Title(), "new", true, new ArrayList<Rental>());
+        List<BookSpecimen> resultList = new ArrayList<>();
+        resultList.add(specimen);
+        when(service.findAvailableSpecimenByTitle(ArgumentMatchers.any())).thenReturn(resultList);
+        when(mapper.mapSpecimenToSpecimenDto(ArgumentMatchers.any())).thenReturn(new BookSpecimenDto(5L, new Title(), "new", true, new ArrayList<Rental>()));
 
         //When&Then
         mockMvc.perform(get("/v1/library/user/getBookSpecimens").contentType(MediaType.APPLICATION_JSON)
-                .param("title", ""))
+                .param("title", "1"))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$" , hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
-    public void testRentBook() throws  Exception{
+    public void testRentBook() throws Exception {
         //Given
-        when(controller.rentBook(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn("Success");
+        when(service.rentBook(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn("Success");
 
         //When&Then
         mockMvc.perform(post("/v1/library/user/rentBook")
@@ -73,9 +70,9 @@ public class LibraryUserControllerTestSuite {
     }
 
     @Test
-    public void testReturnBook() throws  Exception{
+    public void testReturnBook() throws Exception {
         //Given
-        when(controller.returnBook(ArgumentMatchers.any(Long.class))).thenReturn("Success");
+        when(service.returnBook(ArgumentMatchers.any(Long.class))).thenReturn("Success");
 
         //When&Then
         mockMvc.perform(post("/v1/library/user/return")

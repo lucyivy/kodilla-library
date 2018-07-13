@@ -24,11 +24,9 @@ public class LibraryUserController {
     @RequestMapping(method = RequestMethod.GET, value="getBookSpecimens")
     public List<BookSpecimenDto> getAvailableSpecimen(@RequestParam("title") String title) {
         List<BookSpecimenDto> toReturn = new ArrayList<BookSpecimenDto>();
-
         for(BookSpecimen specimen : service.findAvailableSpecimenByTitle(title)) {
             toReturn.add(mapper.mapSpecimenToSpecimenDto(specimen));
         }
-
         return toReturn;
     }
 
