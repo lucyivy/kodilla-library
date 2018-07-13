@@ -57,6 +57,8 @@ public class DbService {
         return result;
     }
 
+    public void deleteSpecimen(Long Id) {bookRepository.deleteById(Id);}
+
     public Optional<BookSpecimen> findSpecimenById(Long Id) {
         return bookRepository.findById(Id);
     }
