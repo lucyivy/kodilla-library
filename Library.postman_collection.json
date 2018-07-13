@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "af71d8fc-907c-4578-b90b-203c30d00dbc",
+		"name": "Library",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateLibraryUser",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\": \"Test1\",\n\t\"lastName\": \"TestSurname\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/createUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"createUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddBook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": {\n        \"title\": \"Name of the Wind\",\n        \"author\": \"Patrick Rothfuss\",\n        \"publishedYear\": 2009\n    },\n    \"status\": \"used\",\n    \"availableForRent\": \"true\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/addBook",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"addBook"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSpecimens",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/listBooks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"listBooks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ListUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/listUsers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"listUsers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/deleteUser?Id=14",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"deleteUser"
+					],
+					"query": [
+						{
+							"key": "Id",
+							"value": "14"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTitles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/listTitles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"listTitles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User:findByTitle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": {\n        \"title\": \"Not Name of the Wind\",\n        \"author\": \"Patrick Rothfuss\",\n        \"publishedYear\": 2007\n\t},\n\t\"status\": \"new\",\n\t\"availableForRent\": \"true\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/admin/addBook",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"admin",
+						"addBook"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RentBook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/user/rentBook?specimenId=27&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"user",
+						"rentBook"
+					],
+					"query": [
+						{
+							"key": "specimenId",
+							"value": "27"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User:returnBook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/v1/library/user/return?rentId=39",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"library",
+						"user",
+						"return"
+					],
+					"query": [
+						{
+							"key": "rentId",
+							"value": "39"
+						}
+					]
+				},
+				"description": "Use Long (rentId) as a parameter. RentId was provided in a rent request."
+			},
+			"response": []
+		}
+	]
+}

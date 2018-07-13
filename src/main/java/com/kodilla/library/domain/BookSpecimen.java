@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name="Specimens")
+@Entity(name = "Specimens")
 public class BookSpecimen {
 
     @Id
@@ -24,10 +24,10 @@ public class BookSpecimen {
     @JoinColumn(name = "Title_Id")
     private Title title;
 
-    @Column(name="Status")
+    @Column(name = "Status")
     private String status;
 
-    @Column(name="AvailabilityForRent")
+    @Column(name = "AvailabilityForRent")
     private boolean isAvailableForRent;
 
     @Transient

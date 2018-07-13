@@ -4,13 +4,11 @@ import com.kodilla.library.domain.BookSpecimen;
 import com.kodilla.library.domain.Rental;
 import com.kodilla.library.domain.Title;
 import com.kodilla.library.domain.User;
-import com.kodilla.library.dto.BookSpecimenDto;
 import com.kodilla.library.repository.BookSpecimenRepository;
 import com.kodilla.library.repository.RentalRepository;
 import com.kodilla.library.repository.TitleRepository;
 import com.kodilla.library.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,7 +56,9 @@ public class DbService {
         return result;
     }
 
-    public void deleteSpecimen(Long Id) {bookRepository.deleteById(Id);}
+    public void deleteSpecimen(Long Id) {
+        bookRepository.deleteById(Id);
+    }
 
     public Optional<BookSpecimen> findSpecimenById(Long Id) {
         return bookRepository.findById(Id);
@@ -70,9 +70,9 @@ public class DbService {
 
     public List<BookSpecimen> findAvailableSpecimenByTitle(String title) {
         List<Title> matchingTitles = new ArrayList<>();
-        for(Title ttl : titleRepository.findAll()) {
+        for (Title ttl : titleRepository.findAll()) {
             System.out.println(ttl.getTitle());
-            if(ttl.getTitle() != null && ttl.getTitle().toLowerCase().contains(title.toLowerCase())) {
+            if (ttl.getTitle() != null && ttl.getTitle().toLowerCase().contains(title.toLowerCase())) {
                 matchingTitles.add(ttl);
             }
         }
@@ -80,9 +80,9 @@ public class DbService {
         List<BookSpecimen> specimens = bookRepository.findAll();
         List<BookSpecimen> matchingSpecimens = new ArrayList<>();
 
-        for(Title ttl : matchingTitles) {
-            for(BookSpecimen specimen : specimens) {
-                if(specimen.getTitle().equals(ttl) && specimen.isAvailableForRent()) {
+        for (Title ttl : matchingTitles) {
+            for (BookSpecimen specimen : specimens) {
+                if (specimen.getTitle() != null && specimen.getTitle().getTitle().equals(ttl.getTitle()) && specimen.isAvailableForRent()) {
                     matchingSpecimens.add(specimen);
                 }
             }
@@ -93,8 +93,8 @@ public class DbService {
 
     public Title saveTitle(Title argument) {
         Title duplicated = null;
-        for(Title title : titleRepository.findAll()) {
-            if(title.getTitle() != null && title.getAuthor() != null && title.getPublishedYear() != 0
+        for (Title title : titleRepository.findAll()) {
+            if (title.getTitle() != null && title.getAuthor() != null && title.getPublishedYear() != 0
                     && title.getTitle().equalsIgnoreCase(argument.getTitle())
                     && title.getAuthor().equalsIgnoreCase(argument.getAuthor())
                     && title.getPublishedYear() == argument.getPublishedYear()) {
@@ -102,10 +102,9 @@ public class DbService {
                 break;
             }
         }
-        if(duplicated == null) {
+        if (duplicated == null) {
             return titleRepository.save(argument);
         } else {
-            //duplicated.setSpecimens(argument.getSpecimens());
             return titleRepository.save(duplicated);
         }
     }
@@ -121,14 +120,16 @@ public class DbService {
     public String rentBook(Long specimenId, Long userId) {
         User user = null;
         BookSpecimen specimen = findSpecimenById(specimenId).get();
-        for(User us : listUsers()) {
-            if(us.getId() == userId) {
+        for (User us : listUsers()) {
+            if (us.getId().equals(userId)) {
                 user = us;
             }
         }
+        System.out.println(specimen.toString());
+        System.out.println(user.toString());
 
-        if(specimen == null || user == null) {
-            return "Your rent was unsuccessful. Please check whether requested specimen is available for rent.";
+        if (specimen == null || user == null) {
+            return "Your rent was unsuccessful. Incorrect specimen or user Id.";
         }
         Rental rental = new Rental();
         user.getRentals().add(rental);
@@ -139,7 +140,7 @@ public class DbService {
         rental.setRentedDate(LocalDate.now());
         rental.setReturnDate(LocalDate.now().plusDays(14));
         Rental result = rentalRepository.save(rental);
-        if(result != null) {
+        if (result != null) {
             return "Your rent was successful. Please return the book by " + result.getReturnDate() + ". Your rent Id is: " +
                     result.getId();
         } else {
@@ -149,13 +150,13 @@ public class DbService {
 
     public String returnBook(Long rentId) {
         Rental currentRent = null;
-        for(Rental rental : rentalRepository.findAll()) {
-            if(rental.getId() ==  rentId && rental.getDateReturned() == null) {
+        for (Rental rental : rentalRepository.findAll()) {
+            if (rental.getId().equals(rentId) && rental.getDateReturned() == null) {
                 currentRent = rental;
                 break;
             }
         }
-        if(currentRent == null ) {
+        if (currentRent == null) {
             return "Invalid rent Id, please try again";
         }
         currentRent.setDateReturned(LocalDate.now());
@@ -163,12 +164,12 @@ public class DbService {
         BookSpecimen specimen = result.getSpecimen();
         specimen.setAvailableForRent(true);
         bookRepository.save(specimen);
-        if(result != null && !result.getDateReturned().isAfter(result.getReturnDate())) {
+        if (result != null && !result.getDateReturned().isAfter(result.getReturnDate())) {
             return "Return successful. Thank you for using our services!";
         } else if (result != null && result.getDateReturned().isAfter(result.getReturnDate())) {
             return "Return successful. However, as you are " + DAYS.between(result.getReturnDate(), result.getDateReturned())
                     + " days late after your due return date, you will be charged penalty fee";
-            } else {
+        } else {
             return "Return unsuccessful. No relevant rent found in database. Please try again.";
         }
     }

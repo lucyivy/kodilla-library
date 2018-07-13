@@ -1,7 +1,9 @@
 package com.kodilla.library.mapper;
 
-import com.kodilla.library.dto.*;
-import com.kodilla.library.domain.*;
+import com.kodilla.library.domain.BookSpecimen;
+import com.kodilla.library.domain.User;
+import com.kodilla.library.dto.BookSpecimenDto;
+import com.kodilla.library.dto.UserDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,10 +14,10 @@ public class LibraryMapper {
 
     public UserDto mapUserToUserDto(User user) {
         return new UserDto(user.getId(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getJoiningDate(),
-                            user.getRentals());
+                user.getFirstName(),
+                user.getLastName(),
+                user.getJoiningDate(),
+                user.getRentals());
     }
 
     public User mapUserDtoToUser(UserDto userDto) {
@@ -28,7 +30,7 @@ public class LibraryMapper {
 
     public List<UserDto> mapUserListToUserDtoList(List<User> users) {
         List<UserDto> resultList = new ArrayList<>();
-        for(User user : users) {
+        for (User user : users) {
             resultList.add(mapUserToUserDto(user));
         }
         return resultList;
@@ -36,7 +38,7 @@ public class LibraryMapper {
 
     public List<User> mapUserDtoListToUserList(List<UserDto> users) {
         List<User> resultList = new ArrayList<>();
-        for(UserDto user : users) {
+        for (UserDto user : users) {
             resultList.add(mapUserDtoToUser(user));
         }
         return resultList;
@@ -57,7 +59,6 @@ public class LibraryMapper {
                 specimenDto.isAvailableForRent(),
                 specimenDto.getRentals());
     }
-
 
 
 }

@@ -14,21 +14,21 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name="Titles")
+@Entity(name = "Titles")
 public class Title {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="Title")
+    @Column(name = "Title")
     @NotNull
     private String title;
 
-    @Column(name="Author")
+    @Column(name = "Author")
     private String author;
 
-    @Column(name="PublicationDate")
+    @Column(name = "PublicationDate")
     private int publishedYear;
 
     @Transient
@@ -37,7 +37,6 @@ public class Title {
     @OneToMany(
             targetEntity = BookSpecimen.class,
             mappedBy = "title",
-            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
     public List<BookSpecimen> getSpecimens() {

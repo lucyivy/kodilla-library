@@ -60,7 +60,7 @@ public class LibraryMapperTestSuite {
     public void testMapUserListToUserDtoList() {
         //Given
         List<User> userList = new ArrayList<>();
-        for(int i = 0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             userList.add(new User((long) i, "Johnny" + i, "Swaczyna" + i, LocalDate.now().minusDays(i), new ArrayList<Rental>()));
         }
         //When
@@ -68,7 +68,7 @@ public class LibraryMapperTestSuite {
 
         //Then
         Assert.assertEquals(userDtoList.size(), userList.size());
-        for(int i = 0; i<userDtoList.size(); i++) {
+        for (int i = 0; i < userDtoList.size(); i++) {
             Assert.assertEquals(userList.get(i).getId(), userDtoList.get(i).getId());
             Assert.assertEquals(userList.get(i).getFirstName(), userDtoList.get(i).getFirstName());
             Assert.assertEquals(userList.get(i).getLastName(), userDtoList.get(i).getLastName());
@@ -81,7 +81,7 @@ public class LibraryMapperTestSuite {
     public void testMapUserDtoListToUserList() {
         //Given
         List<UserDto> userDtoList = new ArrayList<>();
-        for(int i = 0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             userDtoList.add(new UserDto((long) i, "Johnny" + i, "Swaczyna" + i, LocalDate.now().minusDays(i), new ArrayList<Rental>()));
         }
         //When
@@ -89,7 +89,7 @@ public class LibraryMapperTestSuite {
 
         //Then
         Assert.assertEquals(userDtoList.size(), userList.size());
-        for(int i = 0; i<userList.size(); i++) {
+        for (int i = 0; i < userList.size(); i++) {
             Assert.assertEquals(userList.get(i).getId(), userDtoList.get(i).getId());
             Assert.assertEquals(userList.get(i).getFirstName(), userDtoList.get(i).getFirstName());
             Assert.assertEquals(userList.get(i).getLastName(), userDtoList.get(i).getLastName());

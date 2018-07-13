@@ -4,17 +4,21 @@ import com.kodilla.library.domain.BookSpecimen;
 import com.kodilla.library.domain.Rental;
 import com.kodilla.library.domain.Title;
 import com.kodilla.library.domain.User;
+import com.kodilla.library.repository.RentalRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -22,6 +26,10 @@ public class DbServiceTestSuite {
 
     @Autowired
     private DbService service;
+
+    @MockBean
+    private RentalRepository rentalRepository;
+
 
     @Test
     public void testSaveAndListUsers() {
@@ -49,7 +57,7 @@ public class DbServiceTestSuite {
         service.deleteUser(user.getId());
 
         //Then
-        for(User us : service.listUsers()) {
+        for (User us : service.listUsers()) {
             Assert.assertNotEquals(user.getId(), us.getId());
         }
     }
@@ -68,7 +76,7 @@ public class DbServiceTestSuite {
 
         //Then
         Assert.assertNotEquals(0, specimenList.size());
-        Assert.assertEquals(specimenList.get(specimenList.size()-1).getStatus(), specimen.getStatus());
+        Assert.assertEquals(specimenList.get(specimenList.size() - 1).getStatus(), specimen.getStatus());
 
         //Cleanup
         service.deleteSpecimen(specimen.getSpecimenId());
@@ -84,7 +92,7 @@ public class DbServiceTestSuite {
         service.addSpecimen(specimen);
 
         //Then
-        Assert.assertEquals(specimensBeforeSave+1, service.findSpecimens().size());
+        Assert.assertEquals(specimensBeforeSave + 1, service.findSpecimens().size());
 
         //Cleanup
         service.deleteSpecimen(specimen.getSpecimenId());
@@ -98,7 +106,7 @@ public class DbServiceTestSuite {
         BookSpecimen specimen = new BookSpecimen(null, title, "new", true, new ArrayList<Rental>());
         //When
         service.addSpecimen(specimen);
-        BookSpecimen result = service.findSpecimenById(service.findSpecimens().get(0).getSpecimenId()).get();
+        BookSpecimen result = service.findSpecimenById(service.findSpecimens().get(service.findSpecimens().size() - 1).getSpecimenId()).get();
 
         //Then
         Assert.assertEquals(result.getStatus(), specimen.getStatus());
@@ -109,28 +117,11 @@ public class DbServiceTestSuite {
         service.deleteSpecimen(result.getSpecimenId());
     }
 
-    @Test
-    public void testFindAvailableSpecimenByTitle() {
-        //Given
-        Title title = new Title(null, "test", "test", 154, new ArrayList<BookSpecimen>());
-        BookSpecimen specimen = new BookSpecimen(null, title, "new", true, new ArrayList<Rental>());
-        //When
-        service.addSpecimen(specimen);
-        List<BookSpecimen> specimenList = service.findAvailableSpecimenByTitle("test");
-        List<BookSpecimen> specimenListNotMatching = service.findAvailableSpecimenByTitle("dlkfajfaldfkwldfslj");
-
-        //Then
-        Assert.assertNotEquals(0, specimenList.size());
-        Assert.assertEquals(0, specimenListNotMatching.size());
-
-        //Cleanup
-        service.deleteSpecimen(specimenList.get(specimenList.size()-1).getSpecimenId());
-    }
 
     @Test
     public void testSaveFindAndDeleteTitles() {
         //Given
-        Title title = new Title(null, "test", "test", 154, new ArrayList<BookSpecimen>());
+        Title title = new Title(null, "newnewtest", "test", 154, new ArrayList<BookSpecimen>());
         int sizeBeforeSave = service.findAllTitles().size();
         //When
         Title savedTitle = service.saveTitle(title);
@@ -141,7 +132,7 @@ public class DbServiceTestSuite {
         Assert.assertEquals(savedTitle.getAuthor(), title.getAuthor());
         Assert.assertEquals(savedTitle.getPublishedYear(), title.getPublishedYear());
         Assert.assertNotNull(savedTitle.getId());
-        Assert.assertEquals(sizeBeforeSave+1, service.findAllTitles().size());
+        Assert.assertEquals(sizeBeforeSave + 1, service.findAllTitles().size());
 
         //Cleanup
         service.deleteTitle(savedTitle.getId());
@@ -149,29 +140,41 @@ public class DbServiceTestSuite {
     }
 
     @Test
-    public void testRentAndReturnBooks() {
-        Title title = new Title(null, "test", "test", 154, new ArrayList<BookSpecimen>());
-        BookSpecimen specimen = new BookSpecimen(null, title, "new", true, new ArrayList<Rental>());
-        BookSpecimen specimenUnavailable = new BookSpecimen(null, title, "new", false, new ArrayList<Rental>());
+    public void testRentBook() {
+        Title title = new Title(null, "brandnewtest", "test", 154, new ArrayList<BookSpecimen>());
+        BookSpecimen specimen = new BookSpecimen(null, title, "used", true, new ArrayList<Rental>());
 
         BookSpecimen savedSpecimen = service.addSpecimen(specimen);
-        BookSpecimen savedUnavailableSpecimen = service.addSpecimen(specimenUnavailable);
-        User user = new User();
+
+        User user = new User(null, "test", "test");
         User savedUser = service.saveUser(user);
+        when(rentalRepository.save(ArgumentMatchers.any(Rental.class))).thenReturn(new Rental(999L, savedSpecimen, savedUser, LocalDate.now(), LocalDate.now().plusDays(14), null));
 
         //When
         String rentResult = service.rentBook(savedSpecimen.getSpecimenId(), savedUser.getId());
-        String rentResultNegative = service.rentBook(savedUnavailableSpecimen.getSpecimenId(), savedUser.getId());
 
         //Then
         Assert.assertTrue(rentResult.contains("was successful"));
-        Assert.assertTrue(rentResultNegative.contains("was unsuccessful"));
 
-        //When return & Cleanup
-        Long rentId = Long.parseLong(rentResult.substring(rentResult.length()-2));
-        String returnResult = service.returnBook(rentId);
+        //Cleanup
+        service.deleteUser(savedUser.getId());
+        service.deleteSpecimen(savedSpecimen.getSpecimenId());
+    }
+
+    @Test
+    public void testReturnBook() {
+        //Given
+        Rental rental = new Rental(999L, new BookSpecimen(), new User(), LocalDate.now(), LocalDate.now().plusDays(14), null);
+        List<Rental> rentals = new ArrayList<>();
+        rentals.add(rental);
+
+        when(rentalRepository.findAll()).thenReturn(rentals);
+        when(rentalRepository.save(ArgumentMatchers.any(Rental.class))).thenReturn(new Rental(999L, new BookSpecimen(), new User(), LocalDate.now(), LocalDate.now().plusDays(14), LocalDate.now()));
+        //When
+        String result = service.returnBook(999L);
+
 
         //Then
-        Assert.assertTrue(returnResult.contains("successful"));
+        Assert.assertTrue(result.contains("successful"));
     }
 }

@@ -15,20 +15,20 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name="Users")
+@Entity(name = "Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="FirstName")
+    @Column(name = "FirstName")
     private String firstName;
 
-    @Column(name="LastName")
+    @Column(name = "LastName")
     private String lastName;
 
-    @Column(name="JoiningDate")
+    @Column(name = "JoiningDate")
     private LocalDate joiningDate;
 
     @Transient
