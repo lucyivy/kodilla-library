@@ -18,4 +18,7 @@ public interface TitleRepository extends CrudRepository<Title, Long> {
 
     @Override
     Title save(Title title);
+
+    @Override
+    void deleteById(Long Id);
 }

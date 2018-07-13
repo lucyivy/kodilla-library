@@ -64,8 +64,6 @@ public class DbService {
         return bookRepository.findById(Id);
     }
 
-    public BookSpecimen updateSpecimen(BookSpecimen specimen) { return bookRepository.save(specimen); }
-
     public List<BookSpecimen> findSpecimens() {
         return bookRepository.findAll();
     }
@@ -110,6 +108,10 @@ public class DbService {
             //duplicated.setSpecimens(argument.getSpecimens());
             return titleRepository.save(duplicated);
         }
+    }
+
+    public void deleteTitle(Long Id) {
+        titleRepository.deleteById(Id);
     }
 
     public List<Title> findAllTitles() {
